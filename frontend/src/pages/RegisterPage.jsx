@@ -1,25 +1,17 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, TextField, Typography, Link, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@mui/material';
+import { Box, Button, Grid, TextField, Typography, Link, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import authService from '../api/authService';
-import { InputAdornment, IconButton } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    full_name: '',
-    mobile_no: '',
-    email: '',
-    gender: 'M',
-    password: '',
-    confirmPassword: '',
+    full_name: '', mobile_no: '', email: '', gender: 'M',
+    password: '', confirmPassword: '',
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
   const navigate = useNavigate();
   const { full_name, mobile_no, email, gender, password, confirmPassword } = formData;
@@ -28,51 +20,48 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      console.log('Passwords do not match');
-      // In a real app, you would set an error state here
+      // You can also use toast for form validation errors
+      toast.error('Passwords do not match');
       return;
     }
 
-    // We need to match the backend's required fields (e.g. uppercase gender)
     const userData = {
-      full_name,
-      mobile_no,
-      email,
-      gender: gender === 'o' ? gender : gender.toUpperCase(),
+      full_name, mobile_no, email,
+      gender: gender.toUpperCase(),
       password,
     };
 
     try {
-      // Call the register function from our service
-      const data = await authService.register(userData);
-      console.log(data.message);
+      // Destructure the message directly from the response
+      const { message } = await authService.register(userData);
+
+      // Use the message from the API in our success toast
+      toast.success(message);
 
       // Redirect to the login page on success
       navigate('/login');
-
     } catch (error) {
-      console.error('Registration failed:', error.response.data.message);
-      // Show an error message to the user
+      // This is the important part
+      const message = error.response?.data?.message || 'Registration failed';
+      toast.error(message);
     }
   };
 
   return (
-    // The JSX for the form layout is the same
     <Grid container component="main" sx={{ height: '100vh' }}>
       {/* Left Gradient Panel */}
       <Grid
-        item
-        xs={false} sm={4} md={7}
+        item xs={false} sm={4} md={7}
         sx={{
           background: 'linear-gradient(to right bottom, #F9D8FF, #6647D6)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex',
+          justifyContent: 'center', alignItems: 'center',
         }}
       >
         <Typography variant="h2" sx={{ color: 'white', opacity: 0.5 }}>
@@ -107,17 +96,12 @@ const RegisterPage = () => {
             </FormControl>
 
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
+              margin="normal" required fullWidth name="password" label="Password"
               type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={onChange}
+              value={password} onChange={onChange}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleClickShowPassword} edge="end">
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -126,17 +110,12 @@ const RegisterPage = () => {
               }}
             />
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="Confirm Password"
+              margin="normal" required fullWidth name="confirmPassword" label="Confirm Password"
               type={showConfirmPassword ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={onChange}
+              value={confirmPassword} onChange={onChange}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleClickShowConfirmPassword} edge="end">
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
