@@ -12,8 +12,15 @@ const login = async (userData) => {
     return response.data;
 };
 
+// Sends a POST request to the register endpoint
+const register = async (userData) => {
+    const response = await axios.post(API_URL + 'register', userData);
+    return response.data;
+};
+
 const authService = {
     login,
+    register
 };
 
 export default authService;
