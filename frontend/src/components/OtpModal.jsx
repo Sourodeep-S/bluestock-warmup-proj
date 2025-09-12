@@ -1,16 +1,17 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, Link } from '@mui/material';
 
-const OtpModal = ({ open, onClose, onVerifySuccess }) => {
+// 1. Receive the new mobileNumber prop
+const OtpModal = ({ open, onClose, onVerifySuccess, mobileNumber }) => {
 
-    // This function will be called when the user clicks "Verify Mobile"
     const handleVerify = () => {
-        // In a real application, you would make an API call here to verify the OTP.
-        // Since that's not built yet, we'll just assume it's successful.
-
-        // Call the success function passed down from the parent (RegisterPage)
         onVerifySuccess();
     };
+
+    // 2. Create a masked version of the number for display
+    const maskedNumber = mobileNumber
+        ? `${mobileNumber.substring(0, 6)}****${mobileNumber.substring(mobileNumber.length - 3)}`
+        : '';
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -32,19 +33,14 @@ const OtpModal = ({ open, onClose, onVerifySuccess }) => {
                 {/* OTP Info Box */}
                 <Box sx={{ bgcolor: '#FCE4EC', p: 2, borderRadius: 2, textAlign: 'center' }}>
                     <Typography variant="body2">
-                        Enter the One Time Password (OTP) which has been sent to (+91 92222****442)
+                        {/* 3. Use the masked number here */}
+                        Enter the One Time Password (OTP) which has been sent to ({maskedNumber})
                     </Typography>
                 </Box>
 
                 <TextField
-                    autoFocus
-                    margin="dense"
-                    id="otp"
-                    label="Enter Your OTP Here"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    sx={{ my: 2 }}
+                    autoFocus margin="dense" id="otp" label="Enter Your OTP Here" type="text"
+                    fullWidth variant="outlined" sx={{ my: 2 }}
                 />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

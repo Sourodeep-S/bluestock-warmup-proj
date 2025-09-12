@@ -161,6 +161,7 @@ const RegisterPage = () => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onVerifySuccess={handleRegistrationSuccess}
+        mobileNumber={formData.mobile_no}
       />
     </>
   );
