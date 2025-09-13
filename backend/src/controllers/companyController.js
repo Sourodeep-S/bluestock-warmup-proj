@@ -1,28 +1,45 @@
 import pool from '../config/db.js';
 
 export const registerCompany = async (req, res) => {
-    // 1. Get the user's ID from the middleware
     const owner_id = req.user.id;
 
-    // 2. Get all the company details from the request body
+    // Destructure variables from the form data (frontend)
     const {
         company_name,
-        address,
-        city,
-        state,
-        country,
-        postal_code,
+        description, // This comes from the "About Us" field
+        organization_type,
+        industry, // This comes from the "Industry Types" field
+        team_size,
+        founded_date,
         website,
-        industry,
-        description,
+        company_vision,
+        contact_phone,
+        social_links,
+        map_location,
+        contact_email,
     } = req.body;
 
     try {
-        // 3. Insert the new company profile into the database
+        // Map frontend data to the ACTUAL database columns
         const newCompanyProfile = await pool.query(
-            `INSERT INTO company_profile (owner_id, company_name, address, city, state, country, postal_code, website, industry, description)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
-            [owner_id, company_name, address, city, state, country, postal_code, website, industry, description]
+            `INSERT INTO company_profile 
+        (owner_id, company_name, about_company, organizations_type, industry_type, team_size, year_of_establishment, company_website, company_vision, headquarter_phone_no, social_links, map_location_url, headquarter_mail_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`,
+            [
+                owner_id,
+                company_name,
+                description, // Mapped to about_company
+                organization_type,
+                industry, // Mapped to industry_type
+                team_size,
+                founded_date, // Mapped to year_of_establishment
+                website, // Mapped to company_website
+                company_vision,
+                contact_phone, // Mapped to headquarter_phone_no
+                JSON.stringify(social_links),
+                map_location, // Mapped to map_location_url
+                contact_email // Mapped to headquarter_mail_id
+            ]
         );
 
         res.status(201).json({
