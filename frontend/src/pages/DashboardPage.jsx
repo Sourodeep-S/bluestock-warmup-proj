@@ -5,6 +5,7 @@ import CompanyInfoStep from '../components/CompanyInfoStep';
 import FoundingInfoStep from '../components/FoundingInfoStep';
 import SocialLinksStep from '../components/SocialLinksStep';
 import ContactStep from '../components/ContactStep';
+import SuccessStep from '../components/SuccessStep';
 
 const steps = ['Company Info', 'Founding Info', 'Social Media Profile', 'Contact'];
 
@@ -77,11 +78,7 @@ const DashboardPage = () => {
       </Stepper>
 
       {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-        </React.Fragment>
+        <SuccessStep/>
       ) : (
         <React.Fragment>
           {getStepContent(activeStep)}

@@ -1,14 +1,14 @@
 import React from 'react';
-import { Box, Grid, TextField } from '@mui/material';
+import { Box, Grid, TextField, InputAdornment } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css'; 
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import 'react-phone-input-2/lib/style.css';
+import MailOutlineIcon from '@mui/icons-material/MailOutline'; // 1. Import the icon
+
 const ContactStep = ({ formData, setFormData }) => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // react-phone-input-2 has a different onChange signature
     const handlePhoneChange = (value) => {
         setFormData({ ...formData, contact_phone: value });
     };
@@ -30,10 +30,10 @@ const ContactStep = ({ formData, setFormData }) => {
                 {/* Phone Input */}
                 <Grid item xs={12}>
                     <PhoneInput
-                        country={'us'} // Default country
+                        country={'in'}
                         value={formData.contact_phone || ''}
                         onChange={handlePhoneChange}
-                        inputStyle={{ width: '100%' }}
+                        inputStyle={{ width: '100%', height: '56px' }} // Match MUI default height
                     />
                 </Grid>
 
@@ -42,9 +42,18 @@ const ContactStep = ({ formData, setFormData }) => {
                     <TextField
                         fullWidth
                         name="contact_email"
-                        label="Email"
+                        //label="Email"
+                        placeholder='Email'
                         value={formData.contact_email || ''}
                         onChange={handleChange}
+                        // 2. Add the InputProps for the startAdornment
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <MailOutlineIcon />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                 </Grid>
             </Grid>
