@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Stepper, Step, StepLabel, Button, Typography, Container } from '@mui/material';
 
-// We will create these component files next
 import CompanyInfoStep from '../components/CompanyInfoStep';
 import FoundingInfoStep from '../components/FoundingInfoStep';
 import SocialLinksStep from '../components/SocialLinksStep';
@@ -11,14 +10,34 @@ const steps = ['Company Info', 'Founding Info', 'Social Media Profile', 'Contact
 
 const DashboardPage = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    // Initialize social_links as an array with one empty link
+    social_links: [{ platform: '', url: '' }],
+  });
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  // --- Handlers for the multi-step form navigation ---
+  const handleNext = () => setActiveStep((prev) => prev + 1);
+  const handleBack = () => setActiveStep((prev) => prev - 1);
+  const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // --- NEW Handlers for the dynamic social links ---
+  const handleSocialLinkChange = (index, event) => {
+    const newLinks = [...formData.social_links];
+    newLinks[index][event.target.name] = event.target.value;
+    setFormData({ ...formData, social_links: newLinks });
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const handleAddSocialLink = () => {
+    setFormData({
+      ...formData,
+      social_links: [...formData.social_links, { platform: '', url: '' }],
+    });
+  };
+
+  const handleRemoveSocialLink = (index) => {
+    const newLinks = [...formData.social_links];
+    newLinks.splice(index, 1);
+    setFormData({ ...formData, social_links: newLinks });
   };
 
   const getStepContent = (step) => {
@@ -28,7 +47,15 @@ const DashboardPage = () => {
       case 1:
         return <FoundingInfoStep formData={formData} setFormData={setFormData} />;
       case 2:
-        return <SocialLinksStep formData={formData} setFormData={setFormData} />;
+        // Pass the new props down to the SocialLinksStep component
+        return (
+          <SocialLinksStep
+            links={formData.social_links}
+            onLinkChange={handleSocialLinkChange}
+            onAddLink={handleAddSocialLink}
+            onRemoveLink={handleRemoveSocialLink}
+          />
+        );
       case 3:
         return <ContactStep formData={formData} setFormData={setFormData} />;
       default:
