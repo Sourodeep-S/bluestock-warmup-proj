@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Box, Stepper, Step, StepLabel, Button, Typography, Container, LinearProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import CompanyInfoStep from '../components/CompanyInfoStep';
 import FoundingInfoStep from '../components/FoundingInfoStep';
 import SocialLinksStep from '../components/SocialLinksStep';
 import ContactStep from '../components/ContactStep';
 import SuccessStep from '../components/SuccessStep';
+import companyService from '../api/companyService';
+
 
 const steps = ['Company Info', 'Founding Info', 'Social Media Profile', 'Contact'];
 
@@ -15,8 +19,24 @@ const DashboardPage = () => {
     social_links: [{ platform: '', url: '' }],
   });
 
-  const handleNext = () => setActiveStep((prev) => prev + 1);
+  const { token } = useSelector((state) => state.auth);
+
   const handleBack = () => setActiveStep((prev) => prev - 1);
+
+  const handleNext = async () => {
+    if (activeStep === steps.length - 1) {
+      // This is the "Finish" button click
+      try {
+        await companyService.registerCompany(formData, token);
+        setActiveStep((prev) => prev + 1); // Move to the success screen
+      } catch (error) {
+        toast.error(error.response?.data?.message || 'Failed to submit company profile');
+      }
+    } else {
+      // This is a normal "Next" button click
+      setActiveStep((prev) => prev + 1);
+    }
+  };
 
   const handleSocialLinkChange = (index, event) => {
     const newLinks = [...formData.social_links];
