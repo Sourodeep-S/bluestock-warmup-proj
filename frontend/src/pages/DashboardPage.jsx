@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stepper, Step, StepLabel, Button, Typography, Container } from '@mui/material';
+import { Box, Stepper, Step, StepLabel, Button, Typography, Container, LinearProgress } from '@mui/material';
 
 import CompanyInfoStep from '../components/CompanyInfoStep';
 import FoundingInfoStep from '../components/FoundingInfoStep';
@@ -12,16 +12,12 @@ const steps = ['Company Info', 'Founding Info', 'Social Media Profile', 'Contact
 const DashboardPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
-    // Initialize social_links as an array with one empty link
     social_links: [{ platform: '', url: '' }],
   });
 
-  // --- Handlers for the multi-step form navigation ---
   const handleNext = () => setActiveStep((prev) => prev + 1);
   const handleBack = () => setActiveStep((prev) => prev - 1);
-  const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // --- NEW Handlers for the dynamic social links ---
   const handleSocialLinkChange = (index, event) => {
     const newLinks = [...formData.social_links];
     newLinks[index][event.target.name] = event.target.value;
@@ -48,7 +44,6 @@ const DashboardPage = () => {
       case 1:
         return <FoundingInfoStep formData={formData} setFormData={setFormData} />;
       case 2:
-        // Pass the new props down to the SocialLinksStep component
         return (
           <SocialLinksStep
             links={formData.social_links}
@@ -64,12 +59,21 @@ const DashboardPage = () => {
     }
   };
 
+  const progressValue = (activeStep / steps.length) * 100;
+
   return (
     <Container component="main" maxWidth="md" sx={{ my: 4 }}>
-      <Typography component="h1" variant="h4" align="center">
-        Company Registration
-      </Typography>
-      <Stepper activeStep={activeStep} sx={{ my: 4 }}>
+      {activeStep !== steps.length && (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="body1">Setup Progress</Typography>
+            <Typography variant="body1" color="primary">{`${Math.round(progressValue)}% Completed`}</Typography>
+          </Box>
+          <LinearProgress variant="determinate" value={progressValue} sx={{ mb: 4 }} />
+        </>
+      )}
+
+      <Stepper activeStep={activeStep} sx={{ my: 4, display: activeStep === steps.length ? 'none' : 'flex' }}>
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -78,20 +82,19 @@ const DashboardPage = () => {
       </Stepper>
 
       {activeStep === steps.length ? (
-        <SuccessStep/>
+        <SuccessStep />
       ) : (
         <React.Fragment>
           {getStepContent(activeStep)}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
             {activeStep !== 0 && (
-              <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+              <Button onClick={handleBack} sx={{ mr: 1 }}>
                 Back
               </Button>
             )}
             <Button
               variant="contained"
               onClick={handleNext}
-              sx={{ mt: 3, ml: 1 }}
             >
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
