@@ -78,3 +78,35 @@ export const getCompanyProfile = async (req, res) => {
     }
 };
 
+// ... getCompanyProfile function is above this
+
+export const updateCompanyProfile = async (req, res) => {
+    try {
+        const owner_id = req.user.id;
+        const {
+            company_name, about_company, organizations_type, industry_type,
+            team_size, year_of_establishment, company_website, company_vision,
+            headquarter_phone_no, social_links, map_location_url, headquarter_mail_id
+        } = req.body;
+
+        const updatedProfile = await pool.query(
+            `UPDATE company_profile SET
+        company_name = $1, about_company = $2, organizations_type = $3, industry_type = $4,
+        team_size = $5, year_of_establishment = $6, company_website = $7, company_vision = $8,
+        headquarter_phone_no = $9, social_links = $10, map_location_url = $11, headquarter_mail_id = $12
+       WHERE owner_id = $13 RETURNING *`,
+            [
+                company_name, about_company, organizations_type, industry_type, team_size,
+                year_of_establishment, company_website, company_vision, headquarter_phone_no,
+                JSON.stringify(social_links), map_location_url, headquarter_mail_id,
+                owner_id
+            ]
+        );
+
+        res.status(200).json({ success: true, message: 'Profile updated successfully', data: updatedProfile.rows[0] });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
