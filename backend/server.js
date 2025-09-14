@@ -13,9 +13,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/company', companyRoutes); // 2. Use company routes
 
 app.get('/', (req, res) => {
-    res.send('API is running...');
+  res.send('API is running...');
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
