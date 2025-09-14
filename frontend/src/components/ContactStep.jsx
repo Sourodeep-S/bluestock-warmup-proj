@@ -22,7 +22,7 @@ const ContactStep = ({ formData, setFormData }) => {
                         fullWidth
                         name="map_location"
                         label="Map Location"
-                        value={formData.map_location || ''}
+                        value={formData.map_location_url || ''}
                         onChange={handleChange}
                     />
                 </Grid>
@@ -31,7 +31,7 @@ const ContactStep = ({ formData, setFormData }) => {
                 <Grid item xs={12}>
                     <PhoneInput
                         country={'in'}
-                        value={formData.contact_phone || ''}
+                        value={formData.headquarter_phone_no || ''}
                         onChange={handlePhoneChange}
                         inputStyle={{ width: '100%', height: '56px' }} // Match MUI default height
                     />
@@ -44,7 +44,7 @@ const ContactStep = ({ formData, setFormData }) => {
                         name="contact_email"
                         //label="Email"
                         placeholder='Email'
-                        value={formData.contact_email || ''}
+                        value={formData.headquarter_mail_id || ''}
                         onChange={handleChange}
                         // 2. Add the InputProps for the startAdornment
                         InputProps={{

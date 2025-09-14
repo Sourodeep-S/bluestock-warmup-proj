@@ -7,8 +7,16 @@ const API_URL = 'http://localhost:5001/api/auth/';
  * @param {object} userData
  * @returns {Promise}
  */
+
+
 const login = async (userData) => {
     const response = await axios.post(API_URL + 'login', userData);
+
+    // If the response includes a token, save it to localStorage
+    if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+    }
+
     return response.data;
 };
 

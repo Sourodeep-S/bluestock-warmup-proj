@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SettingsPage from './pages/SettingsPage';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import ProtectedRoute from './components/ProtectedRoute'; // 1. Import ProtectedRoute
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
         {/* This is our protected route group */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<DashboardPage />} />
-          {/* Add other protected routes here in the future */}
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </Router>

@@ -58,7 +58,7 @@ const CompanyInfoStep = ({ formData, setFormData }) => {
                 required fullWidth id="description" name="description" label="About Us"
                 multiline rows={6}
                 placeholder="Write down about your company. Let the candidate know who we are..."
-                value={formData.description || ''}
+                value={formData.about_company || ''}
                 onChange={handleChange}
             />
         </Box>

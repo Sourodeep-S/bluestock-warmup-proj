@@ -19,8 +19,19 @@ const registerCompany = async (companyData, token) => {
     return response.data;
 };
 
+const getCompanyProfile = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    const response = await axios.get(API_URL + 'profile', config);
+    return response.data;
+};
+
 const companyService = {
     registerCompany,
+    getCompanyProfile,
 };
 
 export default companyService;

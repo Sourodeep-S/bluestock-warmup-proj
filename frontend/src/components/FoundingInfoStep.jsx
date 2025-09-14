@@ -15,7 +15,7 @@ const FoundingInfoStep = ({ formData, setFormData }) => {
                         <InputLabel id="org-type-label">Organization Type</InputLabel>
                         <Select
                             labelId="org-type-label" name="organization_type"
-                            value={formData.organization_type || ''} label="Organization Type" onChange={handleChange}
+                            value={formData.organizations_type || ''} label="Organization Type" onChange={handleChange}
                         >
                             <MenuItem value="Technology">Technology</MenuItem>
                             <MenuItem value="Finance">Finance</MenuItem>
@@ -28,7 +28,7 @@ const FoundingInfoStep = ({ formData, setFormData }) => {
                         <InputLabel id="industry-type-label">Industry Types</InputLabel>
                         <Select
                             labelId="industry-type-label" name="industry"
-                            value={formData.industry || ''} label="Industry Types" onChange={handleChange}
+                            value={formData.industry_type || ''} label="Industry Types" onChange={handleChange}
                         >
                             <MenuItem value="SaaS">SaaS</MenuItem>
                             <MenuItem value="E-commerce">E-commerce</MenuItem>
@@ -54,13 +54,13 @@ const FoundingInfoStep = ({ formData, setFormData }) => {
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth name="founded_date" label="Year of Establishment"
-                        placeholder="dd/mm/yyyy" value={formData.founded_date || ''} onChange={handleChange}
+                        placeholder="dd/mm/yyyy" value={formData.year_of_establishment || ''} onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth name="website" label="Company Website"
-                        placeholder="Website url..." value={formData.website || ''} onChange={handleChange}
+                        placeholder="Website URL..." value={formData.company_website || ''} onChange={handleChange}
                     />
                 </Grid>
 
