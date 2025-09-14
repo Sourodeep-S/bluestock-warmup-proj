@@ -169,3 +169,29 @@ export const uploadLogo = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+export const uploadBanner = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded.' });
+        }
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "company_banners" }, // Use a different folder
+            async (error, result) => {
+                if (error) { return res.status(500).json({ message: 'Upload failed.' }); }
+
+                await pool.query(
+                    'UPDATE company_profile SET company_banner_url = $1 WHERE owner_id = $2',
+                    [result.secure_url, req.user.id]
+                );
+
+                res.status(200).json({ success: true, message: 'Banner uploaded', data: { url: result.secure_url } });
+            }
+        );
+        uploadStream.end(req.file.buffer);
+    } catch (err) {
+        res.status(500).send('Server Error');
+    }
+};
+
+

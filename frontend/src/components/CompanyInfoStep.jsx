@@ -38,10 +38,9 @@ const CompanyInfoStep = ({ formData, onProfileChange }) => {
         const file = e.target.files[0];
         if (file) {
             try {
-                // We will create this service function and the backend endpoint next
-                // const response = await imageUploadService.uploadBanner(file, token);
-                // onProfileChange({ target: { name: 'company_banner_url', value: response.data.url } });
-                toast.info('Banner upload functionality is next!');
+                const response = await imageUploadService.uploadBanner(file, token);
+                onProfileChange({ target: { name: 'company_banner_url', value: response.data.url } });
+                toast.success('Banner uploaded successfully!');
             } catch (error) {
                 console.error(error);
                 toast.error('Banner upload failed.');
