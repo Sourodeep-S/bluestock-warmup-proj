@@ -4,13 +4,13 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import MailOutlineIcon from '@mui/icons-material/MailOutline'; // 1. Import the icon
 
-const ContactStep = ({ formData, setFormData }) => {
+const ContactStep = ({ formData, onProfileChange }) => {
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        onProfileChange(e);
     };
 
     const handlePhoneChange = (value) => {
-        setFormData({ ...formData, contact_phone: value });
+        onProfileChange(value)
     };
 
     return (

@@ -1,4 +1,5 @@
 import pool from '../config/db.js';
+import cloudinary from '../config/cloudinaryConfig.js';
 
 export const registerCompany = async (req, res) => {
     const owner_id = req.user.id;
@@ -78,7 +79,6 @@ export const getCompanyProfile = async (req, res) => {
     }
 };
 
-// ... getCompanyProfile function is above this
 
 export const updateCompanyProfile = async (req, res) => {
     try {
@@ -104,6 +104,65 @@ export const updateCompanyProfile = async (req, res) => {
         );
 
         res.status(200).json({ success: true, message: 'Profile updated successfully', data: updatedProfile.rows[0] });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+
+export const deleteCompanyProfile = async (req, res) => {
+    try {
+        const owner_id = req.user.id;
+
+        const deleteResult = await pool.query(
+            'DELETE FROM company_profile WHERE owner_id = $1',
+            [owner_id]
+        );
+
+        // The query returns a rowCount. If it's 0, no profile was found to delete.
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ success: false, message: 'Company profile not found to delete' });
+        }
+
+        res.status(200).json({ success: true, message: 'Company profile deleted successfully' });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+export const uploadLogo = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded.' });
+        }
+
+        // Upload the file buffer to Cloudinary
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "company_logos" },
+            async (error, result) => {
+                if (error) {
+                    console.error('Cloudinary upload error:', error);
+                    return res.status(500).json({ success: false, message: 'Failed to upload image.' });
+                }
+
+                // Save the URL to the database
+                const logoUrl = result.secure_url;
+                const owner_id = req.user.id;
+                await pool.query(
+                    'UPDATE company_profile SET company_logo_url = $1 WHERE owner_id = $2',
+                    [logoUrl, owner_id]
+                );
+
+                res.status(200).json({ success: true, message: 'Logo uploaded successfully', data: { url: logoUrl } });
+            }
+        );
+
+        // End the stream and send the buffer
+        uploadStream.end(req.file.buffer);
 
     } catch (err) {
         console.error(err.message);

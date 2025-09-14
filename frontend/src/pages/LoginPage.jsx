@@ -29,7 +29,7 @@ const LoginPage = () => {
             dispatch(setToken(data.token));
 
             // 3. Redirect to the dashboard
-            navigate('/');
+            navigate('/dashboard');
 
         } catch (error) {
             console.error('Login failed:', error.response.data.message);

@@ -29,9 +29,31 @@ const getCompanyProfile = async (token) => {
     return response.data;
 };
 
+const updateCompanyProfile = async (companyData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    const response = await axios.put(API_URL + 'profile', companyData, config);
+    return response.data;
+};
+
+const deleteCompanyProfile = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    const response = await axios.delete(API_URL + 'profile', config);
+    return response.data;
+};
+
 const companyService = {
     registerCompany,
     getCompanyProfile,
+    updateCompanyProfile,
+    deleteCompanyProfile,
 };
 
 export default companyService;

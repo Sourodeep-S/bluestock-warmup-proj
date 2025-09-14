@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SettingsPage from './pages/SettingsPage';
@@ -12,7 +12,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
       <Routes>
         {/* These routes are public */}
         <Route path="/login" element={<LoginPage />} />
@@ -20,9 +20,12 @@ function App() {
 
         {/* This is our protected route group */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
+
+        <Route path="/" element={<Navigate to="/login" />} />
+
       </Routes>
     </Router>
   );

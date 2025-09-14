@@ -8,8 +8,7 @@ import CompanyInfoStep from '../components/CompanyInfoStep';
 import FoundingInfoStep from '../components/FoundingInfoStep';
 import SocialLinksStep from '../components/SocialLinksStep';
 import ContactStep from '../components/ContactStep';
-// We will create the AccountSetting component later
-// import AccountSetting from '../components/AccountSetting';
+import AccountSettings from '../components/AccountSettings';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -46,6 +45,20 @@ const SettingsPage = () => {
         setTabValue(newValue);
     };
 
+    const handleProfileChange = (e) => {
+        setProfileData({ ...profileData, [e.target.name]: e.target.value });
+    };
+
+    const handleSaveChanges = async () => {
+        try {
+            await companyService.updateCompanyProfile(profileData, token);
+            toast.success('Profile updated successfully!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to update profile.');
+        }
+    };
+
     return (
         <Container maxWidth="lg" sx={{ my: 4 }}>
             <Typography variant="h4" gutterBottom>
@@ -58,14 +71,14 @@ const SettingsPage = () => {
                         <Tab label="Founding Info" />
                         <Tab label="Social Media Profile" />
                         <Tab label="Contact Info" />
-                        <Tab label="Account Setting" />
+                        <Tab label="Account Settings" />
                     </Tabs>
                 </Box>
                 <TabPanel value={tabValue} index={0}>
-                    <CompanyInfoStep formData={profileData} setFormData={setProfileData} />
+                    <CompanyInfoStep formData={profileData} onProfileChange={handleProfileChange} />
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                    <FoundingInfoStep formData={profileData} setFormData={setProfileData} />
+                    <FoundingInfoStep formData={profileData} onProfileChange={handleProfileChange} />
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
                     <SocialLinksStep
@@ -74,14 +87,14 @@ const SettingsPage = () => {
                     />
                 </TabPanel>
                 <TabPanel value={tabValue} index={3}>
-                    <ContactStep formData={profileData} setFormData={setProfileData} />
+                    <ContactStep formData={profileData} onProfileChange={handleProfileChange} />
                 </TabPanel>
                 <TabPanel value={tabValue} index={4}>
-                    Account Setting Content
+                   <AccountSettings/>
                 </TabPanel>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-                <Button variant="contained">Save Changes</Button>
+                <Button variant="contained" onClick={handleSaveChanges}>Save Changes</Button>
             </Box>
         </Container>
     );

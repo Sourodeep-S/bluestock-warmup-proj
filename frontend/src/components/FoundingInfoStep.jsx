@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Grid, TextField, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-const FoundingInfoStep = ({ formData, setFormData }) => {
+const FoundingInfoStep = ({ formData, onProfileChange }) => {
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        onProfileChange(e)
     };
 
     return (
