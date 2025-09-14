@@ -53,3 +53,28 @@ export const registerCompany = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+
+export const getCompanyProfile = async (req, res) => {
+    try {
+        // The user's ID is available from the authMiddleware
+        const owner_id = req.user.id;
+
+        const profile = await pool.query(
+            'SELECT * FROM company_profile WHERE owner_id = $1',
+            [owner_id]
+        );
+
+        // Check if a profile was found
+        if (profile.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Company profile not found' });
+        }
+
+        res.status(200).json({ success: true, data: profile.rows[0] });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
