@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stepper, Step, StepLabel, Button, Typography, Container, LinearProgress } from '@mui/material';
+import { Box, Stepper, Step, StepLabel, Button, Typography, Container, LinearProgress, IconButton } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -10,6 +10,9 @@ import ContactStep from '../components/ContactStep';
 import SuccessStep from '../components/SuccessStep';
 import companyService from '../api/companyService';
 
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useNavigate } from 'react-router-dom';
+
 
 const steps = ['Company Info', 'Founding Info', 'Social Media Profile', 'Contact'];
 
@@ -18,6 +21,8 @@ const DashboardPage = () => {
   const [formData, setFormData] = useState({
     social_links: [{ platform: '', url: '' }],
   });
+
+  const navigate = useNavigate();
 
   const { token } = useSelector((state) => state.auth);
 
@@ -83,6 +88,11 @@ const DashboardPage = () => {
 
   return (
     <Container component="main" maxWidth="md" sx={{ my: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <IconButton onClick={() => navigate('/settings')}>
+          <SettingsIcon />
+        </IconButton>
+      </Box>
       {activeStep !== steps.length && (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
